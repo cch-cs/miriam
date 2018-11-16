@@ -1,0 +1,5 @@
+geometry_msgs/PoseStamped[] start
+float32[] jobs
+string fname
+---
+real_robot_controller/Path_array_agentjob gui_path_array

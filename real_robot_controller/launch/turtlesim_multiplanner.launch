@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+	<include file="$(find real_robot_controller)/launch/multi_global_planner_server.launch">
+		<arg name="rob_1" value="turtlebot1"/>
+		<arg name="rob_2" value="turtlebot2"/>
+	</include>
+	<include file="$(find turtlesim_nav)/launch/turtlesim_2robs.launch" />
+</launch>

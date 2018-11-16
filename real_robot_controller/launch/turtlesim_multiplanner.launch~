@@ -1,0 +1,4 @@
+<launch>
+	<include file="$(find real_robot_controller)/launch/multi_global_planner_server.launch" />
+	<include file="$(find turtlesim_nav)/launch/turtlesim_2robs.launch" />
+</launch>

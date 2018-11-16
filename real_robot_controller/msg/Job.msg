@@ -1,0 +1,3 @@
+geometry_msgs/PoseStamped job_start
+geometry_msgs/PoseStamped job_goal
+int16 job_time
