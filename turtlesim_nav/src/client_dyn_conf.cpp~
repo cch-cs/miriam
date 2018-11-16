@@ -1,0 +1,40 @@
+#include <ros/ros.h>
+#include <std_msgs/String.h>
+#include <dynamic_reconfigure/Reconfigure.h>
+#include <dynamic_reconfigure/StrParameter.h>
+#include <dynamic_reconfigure/Config.h>
+
+
+
+
+void DynamicUpdateParameter()
+{
+	dynamic_reconfigure::ReconfigureRequest srv_req;
+	dynamic_reconfigure::ReconfigureResponse srv_resp;
+	dynamic_reconfigure::StrParameter str_param;
+	dynamic_reconfigure::Config conf;
+
+	str_param.name = "base_global_planner";
+	str_param.value = "global_planner/GlobalPlanner";
+	conf.strs.push_back(str_param);
+
+	srv_req.config = conf;
+
+	if (ros::service::call("/move_base/set_parameters", srv_req, srv_resp))
+	{	
+		ROS_INFO("call to set base_global_planner as global_planer/GlobalPlanner succeeded");
+	}
+	else
+	{
+		ROS_INFO("call to set base_global_planner as global_planer/GlobalPlanner failed");
+	}
+}
+
+int main(int argc, char **argv)
+{
+	ros::init(argc, argv,"client_dyn_reconfigure");
+	DynamicUpdateParameter();
+
+
+
+}

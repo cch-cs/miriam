@@ -1,0 +1,82 @@
+include "pioneer.inc"
+include "map.inc"
+include "sick.inc"
+
+# time to pause (in GUI mode) or quit (in headless mode (-g)) the simulation
+quit_time 3600 # 1 hour of simulated time
+
+paused 0
+
+# spatial resolution of the underlying occupancy grid. Default is 0.02m.
+resolution 0.02
+
+# set the multiple of real time that Stage should try to achieve. Default is 1. 
+# set to 0 to go as fast as possible.
+speedup 1.000
+
+# configure the GUI window
+window
+(
+  size [ 1600 846 ] # in pixels
+  scale 28.967 	# pixels per meter
+  center [ 5.404  -22.321 ]
+  rotate [ 0  0 ]
+  			
+  show_data 1              # 1=on 0=off
+)
+
+# load an environment bitmap
+floorplan
+( 
+  name "cave"
+  size [100 100 0.5]
+  pose [50 50 0 0]
+  bitmap "cave.png"
+)
+
+#---------------------------------------#
+#defining a robot
+define topurg ranger
+(
+	sensor( 			
+    range [ 0.0  30.0 ]
+    fov 270.25
+   samples 1081
+  )
+
+  # generic model properties
+  color "black"
+  size [ 0.05 0.05 0.1 ]
+)
+
+define erratic position
+(
+  #size [0.415 0.392 0.25]
+  size [0.35 0.35 0.25]
+  origin [-0.05 0 0 0]
+  gui_nose 1
+  drive "diff"
+  topurg(pose [ 0.050 0.000 0 0.000 ])
+)
+
+define erratic_omni position
+(
+  #size [0.415 0.392 0.25]
+  size [0.35 0.35 0.25]
+  origin [-0.05 0 0 0]
+  gui_nose 1
+  drive "omni"
+  #drive "diff"
+  topurg(pose [ 0.050 0.000 0 0.000 ])
+)
+
+#throwing a robot
+#erratic( pose [ -11.277 23.266 0 180.000 ] name "era" color "blue")
+#erratic_omni( pose [ -13.924 25.020 0 180.000 ] name "era" color "red")
+#erratic( pose [ -15 20 0 180.000 ] name "era" color "green")
+erratic( pose [ 12 24 0 180.000 ] name "era" color "blue")
+erratic_omni( pose [ 20 50 0 180.000 ] name "era" color "red")
+erratic( pose [ 36 42 0 180.000 ] name "era" color "green")
+
+#---------------------------------------#
+

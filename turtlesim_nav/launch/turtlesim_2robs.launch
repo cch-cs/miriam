@@ -1,0 +1,9 @@
+<launch>
+	<include file="$(find turtlesim_nav)/launch/turtle_full.launch" />
+	
+	<node pkg="turtlesim_nav" name="Spawn_client" type="Spawn_client.py" output="screen"/>
+	
+	<node pkg="real_robot_controller" name="global_robot_id" type="robot_id_pub.py" output="screen" args="turtlebot1 turtlebot2"/>
+
+	<include file="$(find turtlesim_nav)/launch/nav_cha.launch" />
+</launch>
