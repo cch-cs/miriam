@@ -155,7 +155,6 @@ def get_children(_condition, _state):
       : A list of children
 
     """
-    print("Hello")
     (agent_pos, jobs, alloc_jobs, idle_goals, _) = condition2comp(_condition)
     (agent_job, agent_idle, blocked) = state2comp(_state)
     (left_agent_pos, left_idle_goals, left_jobs
