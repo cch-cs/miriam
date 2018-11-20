@@ -2,6 +2,8 @@
 #
 #  http://www.ros.org/wiki/move_base
 #
+base_local_planner: "dwa_local_planner/DWAPlannerROS"
+base_global_planner: "multi_global_planner_final/MultiGlobalPlannerFinal"
 shutdown_costmaps: false
 
 controller_frequency: 5.0

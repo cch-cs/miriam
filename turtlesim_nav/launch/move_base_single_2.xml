@@ -1,8 +1,6 @@
 <launch>
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <param name="base_global_planner" value="multi_global_planner_final/MultiGlobalPlannerFinal" />
-    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
 
     <rosparam file="$(find turtlesim_nav)/config/base_local_planner_params.yaml" command="load" />
 
