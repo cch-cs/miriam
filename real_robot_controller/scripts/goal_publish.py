@@ -3,7 +3,7 @@ import copy
 import rospy
 from geometry_msgs.msg import PoseStamped
 from std_msgs.msg import String
-from multirobotglobalplanner.msg import Path_array_agentjob
+from real_robot_controller.msg import Path_array_agentjob
 from nav_msgs.msg import Path
 import tf
 import sys
