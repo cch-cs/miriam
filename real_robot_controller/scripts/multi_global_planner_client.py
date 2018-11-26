@@ -2,10 +2,10 @@
 
 import numpy as np
 import rospy
-from multirobotglobalplanner.msg import Path_array,Path_array_agentjob
-from multirobotglobalplanner.srv import multiplannerjobserver,multiplannerjobserverResponse
-from multirobotglobalplanner.msg import Plan
-from multirobotglobalplanner.msg import Job
+from real_robot_controller.msg import Path_array_agentjob
+from real_robot_controller.srv import multiplannerjobserver,multiplannerjobserverResponse
+from real_robot_controller.msg import Plan
+from real_robot_controller.msg import Job
 from geometry_msgs.msg import PoseStamped
 
 class multiglobalplannerclient:

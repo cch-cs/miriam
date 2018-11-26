@@ -33,8 +33,9 @@ class pose_goal_plan_publisher:
         robot_id = msg.data
         self.agent_pose = PoseStamped()
         listener_ = tf.TransformListener()
-        listener_.waitForTransform('/map',sys.argv[1] + "/base_link",rospy.Time(),rospy.Duration(1.0))
-        robot_pose_position,robot_pose_quaternion = listener_.lookupTransform('/map',sys.argv[1] + "/base_link",rospy.Time())
+        now = rospy.Time.now()
+        listener_.waitForTransform('/map',sys.argv[1] + "/base_link", rospy.Time(), rospy.Duration(1.0))
+        robot_pose_position,robot_pose_quaternion = listener_.lookupTransform('/map',sys.argv[1] + "/base_link", rospy.Time())
         self.agent_pose.header.frame_id = "map"
         self.agent_pose.pose.position.x = robot_pose_position[0]
         self.agent_pose.pose.position.y = robot_pose_position[1]
