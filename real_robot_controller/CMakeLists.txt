@@ -43,9 +43,9 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 
 ## Declare a C++ library
-  add_library(multiglobalplannerfinal_lib srcipts/multi_global_planner_final.cpp)
+  add_library(multiglobalplannerfinal_lib scripts/multi_global_planner_final.cpp)
 
 
-add_executable(multi_global_planner_final srcipts/multi_global_planner_final.cpp)
+add_executable(multi_global_planner_final scripts/multi_global_planner_final.cpp)
 target_link_libraries(multi_global_planner_final ${catkin_LIBRARIES})
 
