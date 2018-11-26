@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+	<param name="/use_sim_time" value="true"/>
+	<include file="$(find real_robot_controller)/launch/multi_global_planner_server.launch">
+		<arg name="rob_1" value="robot_0"/>
+		<arg name="rob_2" value="robot_1"/>
+	</include>
+	<include file="$(find mybot_gazebo)/launch/robots.launch" />
+	<include file="$(find mybot_gazebo)/launch/map_lowres_stage.launch" >
+		<arg name="rob_1" value="robot_0"/>
+		<arg name="rob_2" value="robot_1"/>
+	</include>
+</launch>

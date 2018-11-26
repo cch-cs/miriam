@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+	
+	<include file="$(find real_robot_controller)/launch/multi_global_planner_server.launch">
+		<arg name="rob_1" value="robot1"/>
+		<arg name="rob_2" value="robot2"/>
+	</include>
+	<include file="$(find mybot_gazebo)/launch/mybots_world.launch" />
+	<include file="$(find mybot_gazebo)/launch/map_lowres.launch" >
+		<arg name="rob_1" value="robot1"/>
+		<arg name="rob_2" value="robot2"/>
+	</include>
+</launch>

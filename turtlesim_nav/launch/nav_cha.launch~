@@ -1,0 +1,13 @@
+<launch>
+ <group ns="turtlebot1">
+  <include file="$(find turtlesim_nav)/launch/navigation_1.launch" />
+  <include file="$(find msb_interface)/msb_mulag.launch" />
+ </group>
+ 
+ <group ns="turtlebot2">
+  <include file="$(find turtlesim_nav)/launch/navigation_2.launch" />
+  <include file="$(find msb_interface)/msb_mulag.launch" />
+ </group>
+ 
+</launch>
+
