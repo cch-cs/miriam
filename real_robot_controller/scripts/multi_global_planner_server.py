@@ -5,9 +5,8 @@ import os
 import sys
 from nav_msgs.msg import OccupancyGrid,Path
 from geometry_msgs.msg import PoseStamped
-from multirobotglobalplanner.msg import Plan,Path_array
+from real_robot_controller.msg import Plan,Path_array
 sys.path.append(os.path.realpath(os.path.join(__file__,"../../../")))
-
 from planner.tcbs.plan import generate_config
 from planner.greedy.greedy import plan_greedy
 from real_robot_controller.msg import Path_array_agentjob
