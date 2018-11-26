@@ -3,9 +3,8 @@
 import sys
 import numpy as np
 import rospy
-from multirobotglobalplanner.msg import Path_array
 from geometry_msgs.msg import PoseStamped
-from multirobotglobalplanner.msg import Plan
+from real_robot_controller.msg import Plan
 
 class agents_pos_publisher:
     def __init__(self):

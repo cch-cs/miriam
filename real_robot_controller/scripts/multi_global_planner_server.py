@@ -10,9 +10,9 @@ sys.path.append(os.path.realpath(os.path.join(__file__,"../../../")))
 
 from planner.tcbs.plan import generate_config
 from planner.greedy.greedy import plan_greedy
-from multirobotglobalplanner.msg import Path_array_agentjob
-from multirobotglobalplanner.msg import agent_job,agent_paths
-from multirobotglobalplanner.srv import multiplannerjobserver,multiplannerjobserverResponse
+from real_robot_controller.msg import Path_array_agentjob
+from real_robot_controller.msg import agent_job,agent_paths
+from real_robot_controller.srv import multiplannerjobserver,multiplannerjobserverResponse
 import rospy
 
 def handle_multi_planner(req):

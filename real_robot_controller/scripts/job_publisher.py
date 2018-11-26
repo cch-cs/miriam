@@ -13,8 +13,8 @@ def job():
     job.job_start.pose.position.y = 5 # 12.2
     job.job_start.pose.orientation.w = 1
     job.job_goal.header.frame_id = "map"
-    job.job_goal.pose.position.x = 4.4 # 11.4
-    job.job_goal.pose.position.y = 5.7 # 12.7
+    job.job_goal.pose.position.x = 4 # 11.4
+    job.job_goal.pose.position.y = 5 # 12.7
     job.job_goal.pose.orientation.w = 1
     job.job_time = 1
     while True:
