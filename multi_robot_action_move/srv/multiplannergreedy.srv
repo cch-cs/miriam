@@ -1,0 +1,5 @@
+robot_pose_array start
+float32[] jobs
+string fname
+---
+Path_array_agents_id gui_path_array
