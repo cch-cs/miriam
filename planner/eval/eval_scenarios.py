@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-sys.path.append('/home/cch-student/own_ws/src/miriam')
+sys.path.append('/home/cch-student/my_ws/src/miriam')
 
 from planner.tcbs.plan import plan, generate_config
 from planner.eval.display import plot_results
@@ -204,7 +204,7 @@ def o():
 
     _map = load_map('o.png')
     agent_pos = [(1, 3),
-#                 (6, 1),
+#                (6, 1),
 #                 (2, 2),
                  (1, 1)]
     jobs = [((7, 4), (0, 4), 4),

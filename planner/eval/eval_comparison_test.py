@@ -8,7 +8,7 @@ from threading import Thread, Event
 from planner.cbs_ext_test import get_data_random
 from planner.eval.eval_scenarios import get_costs
 from planner.tcbs.plan import generate_config, plan, pre_calc_paths
-from tools import benchmark, mongodb_save, is_cch, get_map_str
+#from tools import benchmark, mongodb_save, is_cch, get_map_str
 
 class MyThread(Thread):
     def __init__(self, event):

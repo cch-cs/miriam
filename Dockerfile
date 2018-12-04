@@ -14,10 +14,12 @@ RUN apt-get install -y libblas3 liblapack3 wget
 #####
 
 # python
-RUN apt-get install -y python3 python3-pip python3-tk git iputils-ping
+RUN apt-get install -y python2.7 python-pip python-tk git iputils-ping
 COPY requirements.txt /
 RUN mkdir /miriam/
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt
+RUN python -m pip install -U pip setuptools
+RUN python -m pip install matplotlib
 #####
 
 # bonmin
@@ -49,7 +51,9 @@ COPY . /miriam/
 #####
 
 # python
-WORKDIR /miriam
+WORKDIR /miriam/planner/eval
 ENV PYTHONPATH /miriam
-CMD ["py.test","/miriam/.","-vs"]
+CMD ["echo", "Hello World...!"]
+#CMD ["py.test","/miriam/.","-vs"]
+CMD ["python","eval_scenarios.py"]
 #####
