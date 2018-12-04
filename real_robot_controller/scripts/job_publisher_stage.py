@@ -2,7 +2,7 @@
 
 import rospy
 from std_msgs.msg import String
-from multirobotglobalplanner.msg import Job
+from real_robot_controller.msg import Job
 import time
 
 def job():
