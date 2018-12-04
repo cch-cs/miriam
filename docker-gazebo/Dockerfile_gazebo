@@ -1,4 +1,3 @@
-
 FROM ubuntu:xenial
 
 # REQUIREMENTS
@@ -53,22 +52,17 @@ COPY . /miriam/
 
 FROM ros:kinetic-ros-base
 
-RUN rm -f /etc/apt/sources.list.d/ros-latest.list/binary-amd64/Packages
-RUN apt-get update
-RUN apt-get install -y ros-kinetic-navigation 
+RUN apt-get update 
 RUN apt-get install -y ros-kinetic-rviz
 RUN apt-get install -y ros-kinetic-rviz-plugin-tutorials
 RUN rm -rf /var/lib/apt/lists/
 RUN touch ./root/bashrc && echo "source /opt/ros/kinetic/setup.bash" >> /root/.bashrc
 
-
 # python
-WORKDIR /miriam/real_robot_controller/scripts
+WORKDIR /miriam/real_robot_controller/launch
 ENV PYTHONPATH /miriam
 CMD ["echo", "Hello World...!"]
 #CMD ["py.test","/miriam/.","-vs"]
-#CMD ["python","eval_scenarios.py"]
-CMD ["rosrun","job_publisher_1.py"]
-#CMD ["roslaunch","real_robot_controller gazebo_multiplanner.launch" ]
+CMD ["python","eval_scenarios.py"]
+CMD ["python","job_publisher_1.py"]
 #####
-

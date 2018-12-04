@@ -3,7 +3,7 @@
 import time
 import rospy
 from std_msgs.msg import String
-from multirobotglobalplanner.msg import Job
+from real_robot_controller.msg import Job
 
 def job():
     pub = rospy.Publisher('job', Job, queue_size=1)
