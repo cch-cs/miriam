@@ -1,19 +1,15 @@
-import rospy
-from nav_msgs.msg import OccupancyGrid
-
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import os
-import rospy
 sys.path.append(os.path.realpath(os.path.join(__file__,"../../../")))
-# sys.path.append('/home/cch-student/my_ws/src/miriam')
+#sys.path.append('/home/cch-student/my_ws/src/miriam')
 import time
 
 from planner.tcbs.plan import plan, generate_config
 from planner.eval.display import plot_results
 from planner.greedy.greedy import plan_greedy
-from planner.greedy.try_plan import plan_1
+#from planner.greedy.try_plan import plan_1
 
 #from tools import load_map, get_map_str // get_map_str not defined in the header file
 from tools import load_map
