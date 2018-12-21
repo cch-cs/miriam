@@ -7,23 +7,32 @@ from nav_msgs.msg import OccupancyGrid,Path
 from geometry_msgs.msg import PoseStamped
 from real_robot_controller.msg import Plan
 sys.path.append(os.path.realpath(os.path.join(__file__,"../../../")))
+from tools import load_map
 from planner.tcbs.plan import generate_config
 from planner.greedy.greedy import plan_greedy
+from planner.tcbs.plan import plan as plan_tcbs
 from real_robot_controller.msg import Path_array_agentjob
 from real_robot_controller.msg import agent_job,agent_paths
 from real_robot_controller.srv import multiplannerjobserver,multiplannerjobserverResponse
 import rospy
 
+# global map 
+# map = load_map('world_multiplanner.png')
+
 def handle_multi_planner(req):
-    _map = rospy.wait_for_message("/map",OccupancyGrid) # change the topic based on the namespace
-    map_resolution = round(_map.info.resolution,2)
-    print(map_resolution)
-    map_width = _map.info.width
-    map_height = _map.info.height
-    map = np.array(_map.data)
-    map = np.reshape(map,(map_height,map_width))
-    print("map")
-    print(len(map))
+    #global map
+    _map = load_map('/home/cch-student/my_ws/src/world_multiplanner.png')
+#    print ('Map is: ' + _map)
+#    _map = rospy.wait_for_message("/map",OccupancyGrid) # change the topic based on the namespace
+#    map_resolution = round(_map.info.resolution,2)
+#    print(map_resolution)
+    map_resolution = 1 #
+#    map_width = _map.info.width
+#    map_height = _map.info.height
+#    map = np.array(_map.data)
+#    map = np.reshape(map,(map_height,map_width))
+#    print("map")
+#    print(len(map))
     agent_pos = []
     for pos in req.start:
         agent_pos.append((round(pos.pose.position.x/map_resolution,0),round(pos.pose.position.y/map_resolution,0))) #round based on map resolution
@@ -38,7 +47,8 @@ def handle_multi_planner(req):
         job = (tuple_start,tuple_goal,sublist[4])
         print(job)
         jobs.append(job)
-    grid = np.repeat(map[:, ::, np.newaxis], 100, axis=2)
+    grid = np.repeat(_map[:, ::2, np.newaxis], 100, axis=2)
+#    grid = np.repeat(_map[:, ::, np.newaxis], 100, axis=2)
 
     config = generate_config()
     config['filename_pathsave'] = req.fname
@@ -48,7 +58,8 @@ def handle_multi_planner(req):
     print(str(agent_pos))
     print("GREEDY")
     gui_path_array = Path_array_agentjob()
-    res_agent_job, tuple_paths = plan_greedy(agent_pos, jobs, grid, config)
+#    res_agent_job, tuple_paths = plan_greedy(agent_pos, jobs, grid, config)
+    res_agent_job, idle, tuple_paths = plan_tcbs(agent_pos, jobs, [], [], grid, config, plot=False)
     max_job_size = max([len(i) for i in res_agent_job]) * 2
     gui_path_array.max_job_size = max_job_size
 

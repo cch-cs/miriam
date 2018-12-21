@@ -140,7 +140,7 @@ def test_planner_comparison():
     # this will stop the timer
     stopFlag.set()
 
-def test_world_multiplanner():
+def test_world_multiplanner():  #
     _map = load_map('world_multiplanner.png')
     agent_pos = [(5.0, 2.0),
                  (2.0, 6.0)]

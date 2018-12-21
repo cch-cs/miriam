@@ -1,3 +1,11 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Dec 21 11:47:29 2018
+
+@author: cch-student
+"""
+
 import logging
 import numpy as np
 from functools import reduce
@@ -9,16 +17,22 @@ from planner.common import path
 
 logging.getLogger('pyutilib.component.core.pca').setLevel(logging.INFO)
 
-t = tuple
-
-def manhattan_dist(a, b):
+def distance(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-
-def plan_greedy(agent_pos, jobs, grid, config):
+def plan_1(agent_pos, jobs, grid, config):
+    print ("Agents Positions ")
+    print ( agent_pos )
+    print ("Jobs ")
+    print ( jobs )
+#    print ("Grid ")
+#    print ( grid )
+    print ("config ")
+    print (config)
+    
     filename = config['filename_pathsave']
     load_paths(filename)
-    res_agent_job = strictly_consec(agent_pos, jobs, grid)
+    res_agent_job = try_assign(agent_pos, jobs, grid)
     assertjobs = reduce(lambda a, b: a + b, res_agent_job, tuple())
     for ij in range(len(jobs)):
         assert ij in assertjobs
@@ -66,9 +80,8 @@ def get_closest(possible_starts, free_tasks_starts, grid, n):
     i_possible_starts = result[nearest]
     return i_free_tasks_start, i_possible_starts, paths[best_path]
 
-
-def strictly_consec(agents_list, tasks, grid):
-    N_CLOSEST = 2
+def try_assign(agents_list, tasks, grid):
+    
     TYPE = "float64"
     agents = np.array(agents_list, dtype=TYPE)
     tasks = make_unique(tasks)
@@ -80,39 +93,41 @@ def strictly_consec(agents_list, tasks, grid):
     print(free_agents)
     print("free_tasks")
     print(free_tasks)
+    
 
     consec = {}
     agent_task_d = {}
 
     while len(free_tasks) > 0:
-        free_tasks_ends = np.array(list(map(lambda a: a[1], free_tasks)), dtype=TYPE)
-        free_tasks_starts = np.array(list(map(lambda a: a[0], free_tasks)), dtype=TYPE)
-        if len(free_tasks) > len(free_agents):
-            possible_starts = np.concatenate([free_agents, free_tasks_ends], axis=0)
-        else:
-            possible_starts = free_agents
-        if len(possible_starts) > 1:
-            i_free_tasks_start, i_possible_starts, p = get_closest(
-                possible_starts, free_tasks_starts, grid, N_CLOSEST)
-        else:  # only one start left
-            i_free_tasks_start = 0
-            i_possible_starts = 0
-        if i_possible_starts >= len(free_agents):  # is a task end
-            i_task_end = i_possible_starts - len(free_agents)
-            consec[i_task_end] = tasks.index(free_tasks[i_free_tasks_start])  # after this task comes that
-        else:  # an agent
-            i_agent = agents_list.index(t(free_agents[i_possible_starts]))
-            agent_task_d[i_agent] = tasks.index(t(free_tasks[i_free_tasks_start]))
-            free_agents = np.delete(free_agents, i_possible_starts, axis=0)
-        free_tasks.pop(i_free_tasks_start)
-
-    agent_task = [tuple() for _ in range(len(agents_list))]
-    for k, v in agent_task_d.items():
-        agent_task[k] = (v,)
-        t_to_check = v
-        while t_to_check in consec.keys():
-            consec_t = consec[t_to_check]
-            agent_task[k] = agent_task[k] + (consec_t,)
-            t_to_check = consec_t
-
-    return agent_task
+#        free_tasks_ends = np.array(list(map(lambda a: a[1], free_tasks)), dtype=TYPE)
+#        free_tasks_starts = np.array(list(map(lambda a: a[0], free_tasks)), dtype=TYPE)
+#        if len(free_tasks) > len(free_agents):
+#            possible_starts = np.concatenate([free_agents, free_tasks_ends], axis=0)
+#        else:
+#            possible_starts = free_agents
+#        if len(possible_starts) > 1:
+#            i_free_tasks_start, i_possible_starts, p = get_closest(
+#                possible_starts, free_tasks_starts, grid, N_CLOSEST)
+#        else:  # only one start left
+#            i_free_tasks_start = 0
+#            i_possible_starts = 0
+#        if i_possible_starts >= len(free_agents):  # is a task end
+#            i_task_end = i_possible_starts - len(free_agents)
+#            consec[i_task_end] = tasks.index(free_tasks[i_free_tasks_start])  # after this task comes that
+#        else:  # an agent
+#            i_agent = agents_list.index(t(free_agents[i_possible_starts]))
+#            agent_task_d[i_agent] = tasks.index(t(free_tasks[i_free_tasks_start]))
+#            free_agents = np.delete(free_agents, i_possible_starts, axis=0)
+#        free_tasks.pop(i_free_tasks_start)
+#
+#    agent_task = [tuple() for _ in range(len(agents_list))]
+#    for k, v in agent_task_d.items():
+#        agent_task[k] = (v,)
+#        t_to_check = v
+#        while t_to_check in consec.keys():
+#            consec_t = consec[t_to_check]
+#            agent_task[k] = agent_task[k] + (consec_t,)
+#            t_to_check = consec_t
+#
+#    return agent_task
+    
