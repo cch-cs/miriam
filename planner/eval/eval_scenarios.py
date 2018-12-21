@@ -2,10 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 sys.path.append('/home/cch-student/my_ws/src/miriam')
+import time
 
 from planner.tcbs.plan import plan, generate_config
 from planner.eval.display import plot_results
 from planner.greedy.greedy import plan_greedy
+from planner.greedy.try_plan import plan_1
+
 #from tools import load_map, get_map_str // get_map_str not defined in the header file
 from tools import load_map
 
@@ -24,17 +27,20 @@ def eval(_map, agent_pos, jobs, fname, display=False, finished_blocking=True):
     # mapstr = get_map_str(grid) // chandra commented, no function defined in header file
     # print(mapstr) // chandra commented
     print("PLAN")
-    res_agent_job, res_agent_idle, res_paths = plan(agent_pos, jobs, [], [], grid, config, plot=False)
+    #res_agent_job, res_agent_idle, res_paths = plan(agent_pos, jobs, [], [], grid, config, plot=False)
     # print("agent_job: " + str(res_agent_job))
     # print("paths: " + str(res_paths))
     # costs_opt = get_costs(res_paths, jobs, res_agent_job, display)
     #
-    # print("GREEDY")
-    # minlp_res_agent_job, minlp_res_paths = plan_greedy(agent_pos, jobs, grid, config)k.
-    # print("agent_job: " + str(minlp_res_agent_job))
-    # print("paths: " + str(minlp_res_paths))
-    # costs_minlp = get_costs(minlp_res_paths, jobs, minlp_res_agent_job, display)
+    print("-----------------------GREEDY-----------------------")
+    greedy_time = time.time()
+    minlp_res_agent_job, minlp_res_paths = plan_greedy(agent_pos, jobs, grid, config)
+    print("agent_job: " + str(minlp_res_agent_job))
+    #print("paths: " + str(minlp_res_paths))
+    costs_minlp = get_costs(minlp_res_paths, jobs, minlp_res_agent_job, display)
+    print("--- Time taken is %s seconds ---" % (time.time() - greedy_time))
     #
+    plan_1(agent_pos, jobs, grid, config)
     # # MINLP VS PLAN
     # if display:
     #     fig = plt.figure()
@@ -43,11 +49,13 @@ def eval(_map, agent_pos, jobs, fname, display=False, finished_blocking=True):
     #     plot_results(ax1, [], res_paths, res_agent_job, agent_pos, grid, [], jobs)
     #     plot_results(ax2, [], minlp_res_paths, minlp_res_agent_job, agent_pos, grid, [], jobs)
     #     plt.show()
-
-    print("TCBS")
-    print("agent_job: " + str(res_agent_job))
-    print("paths: " + str(res_paths))
-    costs_tcbs = get_costs(res_paths, jobs, res_agent_job, display)
+#    print("-----------------------TCBS-----------------------")
+#    tcbs_time = time.time()
+#    res_agent_job, res_agent_idle, res_paths = plan(agent_pos, jobs, [], [], grid, config, plot=False)
+#    print("agent_job: " + str(res_agent_job))
+#    #print("paths: " + str(res_paths))
+#    costs_tcbs = get_costs(res_paths, jobs, res_agent_job, display)
+#    print("--- Time taken is %s seconds ---" % (time.time() - tcbs_time))
 
     return 0 #costs_tcbs, #costs_minlp
 
@@ -194,7 +202,7 @@ def ff():
     jobs = random_jobs(2, [(0, 0), (2, 0), (2, 6), (4, 6), (6, 2), (7, 7)])
     _map = load_map('ff.png')
     agent_pos = [(0, 0),
-              (2, 6),
+#              (2, 6),
               (7, 7)]
     return eval(_map, agent_pos, jobs, 'ff.pkl', finished_blocking=False, display=False)
 
@@ -204,13 +212,15 @@ def o():
 
     _map = load_map('o.png')
     agent_pos = [(1, 3),
-#                (6, 1),
+#                 (6, 1),
 #                 (2, 2),
                  (1, 1)]
-    jobs = [((7, 4), (0, 4), 4),
-#            ((2, 0), (3, 7), 3),
-#            ((4, 5), (7, 5), 0),
-            ((4, 4), (6, 5), 1)]
+    jobs = [
+            ((7, 4), (0, 4), 4),
+            ((2, 0), (3, 7), 3),
+            ((4, 5), (7, 5), 0),
+            ((4, 4), (6, 5), 1)
+            ]
     eval(_map, agent_pos, jobs, 'o.pkl', finished_blocking=False, display=True)
 
 
