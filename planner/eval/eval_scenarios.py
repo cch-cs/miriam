@@ -1,7 +1,13 @@
+import rospy
+from nav_msgs.msg import OccupancyGrid
+
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-sys.path.append('/home/cch-student/my_ws/src/miriam')
+import os
+import rospy
+sys.path.append(os.path.realpath(os.path.join(__file__,"../../../")))
+# sys.path.append('/home/cch-student/my_ws/src/miriam')
 
 from planner.tcbs.plan import plan, generate_config
 from planner.eval.display import plot_results
@@ -24,16 +30,16 @@ def eval(_map, agent_pos, jobs, fname, display=False, finished_blocking=True):
     # mapstr = get_map_str(grid) // chandra commented, no function defined in header file
     # print(mapstr) // chandra commented
     print("PLAN")
-    res_agent_job, res_agent_idle, res_paths = plan(agent_pos, jobs, [], [], grid, config, plot=False)
+    # # # res_agent_job, res_agent_idle, res_paths = plan(agent_pos, jobs, [], [], grid, config, plot=False)
     # print("agent_job: " + str(res_agent_job))
     # print("paths: " + str(res_paths))
     # costs_opt = get_costs(res_paths, jobs, res_agent_job, display)
     #
     # print("GREEDY")
-    # minlp_res_agent_job, minlp_res_paths = plan_greedy(agent_pos, jobs, grid, config)k.
-    # print("agent_job: " + str(minlp_res_agent_job))
-    # print("paths: " + str(minlp_res_paths))
-    # costs_minlp = get_costs(minlp_res_paths, jobs, minlp_res_agent_job, display)
+    minlp_res_agent_job, minlp_res_paths = plan_greedy(agent_pos, jobs, grid, config)
+    print("agent_job: " + str(minlp_res_agent_job))
+    print("paths: " + str(minlp_res_paths))
+    costs_minlp = get_costs(minlp_res_paths, jobs, minlp_res_agent_job, display)
     #
     # # MINLP VS PLAN
     # if display:
@@ -44,10 +50,10 @@ def eval(_map, agent_pos, jobs, fname, display=False, finished_blocking=True):
     #     plot_results(ax2, [], minlp_res_paths, minlp_res_agent_job, agent_pos, grid, [], jobs)
     #     plt.show()
 
-    print("TCBS")
-    print("agent_job: " + str(res_agent_job))
-    print("paths: " + str(res_paths))
-    costs_tcbs = get_costs(res_paths, jobs, res_agent_job, display)
+    # # # print("TCBS")
+    # # # print("agent_job: " + str(res_agent_job))
+    # # # print("paths: " + str(res_paths))
+    # # # costs_tcbs = get_costs(res_paths, jobs, res_agent_job, display)
 
     return 0 #costs_tcbs, #costs_minlp
 
@@ -201,7 +207,6 @@ def ff():
 
 # -------
 def o():
-
     _map = load_map('o.png')
     agent_pos = [(1, 3),
 #                (6, 1),
@@ -212,8 +217,6 @@ def o():
 #            ((4, 5), (7, 5), 0),
             ((4, 4), (6, 5), 1)]
     eval(_map, agent_pos, jobs, 'o.pkl', finished_blocking=False, display=True)
-
-
 
 if __name__ == "__main__":
     o()

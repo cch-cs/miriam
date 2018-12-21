@@ -5,10 +5,11 @@ import math
 import random
 from threading import Thread, Event
 
+
 from planner.cbs_ext_test import get_data_random
 from planner.eval.eval_scenarios import get_costs
 from planner.tcbs.plan import generate_config, plan, pre_calc_paths
-#from tools import benchmark, mongodb_save, is_cch, get_map_str
+from tools import benchmark, mongodb_save, is_cch , get_map_str
 
 class MyThread(Thread):
     def __init__(self, event):
@@ -139,6 +140,16 @@ def test_planner_comparison():
     # this will stop the timer
     stopFlag.set()
 
+def test_world_multiplanner():
+    _map = load_map('world_multiplanner.png')
+    agent_pos = [(5.0, 2.0),
+                 (2.0, 6.0)]
+    jobs =  [((2.0, 5.0), (3.0, 5.0), 1.0),
+            ((6.0, 2.0), (4.0, 4.0), 2.0),
+             ((4.0, 3.0), (2.0, 5.0), 3.0),
+            ((3.0, 6.0), (1.0, 4.0), 4.0)]
+    from planner.eval.eval_scenarios import eval
+    eval(_map, agent_pos, jobs, 'sample.pkl', finished_blocking=False, display=True)
 
 if __name__ == "__main__":
     test_planner_comparison()
