@@ -1,0 +1,10 @@
+<launch>
+	<arg name="map_file" default="$(find turtlesim_nav)/map/world.yaml"/>
+
+	<!--- Run map_server -->
+	<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+
+	<!--- Run move base -->
+	<include file="$(find turtlesim_nav)/launch/move_base_single_1_goal_pub.xml" />
+	
+</launch>

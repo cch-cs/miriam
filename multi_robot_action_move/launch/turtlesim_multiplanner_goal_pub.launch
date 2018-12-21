@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+	<include file="$(find multi_robot_action_move)/launch/multi_global_planner_server_goal_pub.launch">
+		<arg name="rob_1" value="turtlebot1"/>
+		<arg name="rob_2" value="turtlebot2"/>
+	</include>
+	<include file="$(find turtlesim_nav)/launch/turtlesim_2robs_goal_pub.launch" />
+
+	<node pkg="multi_robot_action_move" name="job_publisher_rob_id" type="job_publisher_rob_id.py" output="screen" />
+</launch>

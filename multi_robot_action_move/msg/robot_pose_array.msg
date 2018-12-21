@@ -1,1 +1,1 @@
-robot_pose[] robot_pose_array
+robot_pose[] robot_name_pose

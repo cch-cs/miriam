@@ -10,4 +10,6 @@
 		<arg name="rob_1" value="robot1"/>
 		<arg name="rob_2" value="robot2"/>
 	</include>
+
+	<node pkg="real_robot_controller" name="job_publisher_rob_id" type="job_publisher_rob_id.py" output="screen" />
 </launch>

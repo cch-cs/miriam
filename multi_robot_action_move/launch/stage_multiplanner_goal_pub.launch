@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+	<param name="/use_sim_time" value="true"/>
+	<include file="$(find multi_robot_action_move)/launch/multi_global_planner_server_goal_pub.launch">
+		<arg name="rob_1" value="robot_0"/>
+		<arg name="rob_2" value="robot_1"/>
+	</include>
+	<include file="$(find mybot_gazebo)/launch/robots_goal_pub.launch" />
+	<include file="$(find mybot_gazebo)/launch/map_lowres_stage_goal_pub.launch" >
+		<arg name="rob_1" value="robot_0"/>
+		<arg name="rob_2" value="robot_1"/>
+	</include>
+
+	<node pkg="multi_robot_action_move" name="job_publisher_rob_id" type="job_publisher_rob_id.py" output="screen" />
+
+</launch>

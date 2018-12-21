@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+	<arg name="rob_1"/>
+	<arg name="rob_2"/>
+<!--
+	<node pkg="multi_robot_action_move" type= "multi_global_planner_agentpos_pub.py" name = "multi_global_planner_agentpos_pub" output="screen" args="$(arg rob_1) $(arg rob_2)"/> -->
+	<node pkg="multi_robot_action_move" type= "multi_global_planner_client_goal_pub.py" name = "multi_global_planner_client_goal_pub" output="screen" args="$(arg rob_1) $(arg rob_2)"/>
+	<node pkg="multi_robot_action_move" type= "multi_global_planner_server_goal_pub.py" name = "multi_global_planner_server_goal_pub" output="screen"/>
+</launch>
