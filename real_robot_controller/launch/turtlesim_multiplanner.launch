@@ -5,4 +5,7 @@
 		<arg name="rob_2" value="turtlebot2"/>
 	</include>
 	<include file="$(find turtlesim_nav)/launch/turtlesim_2robs.launch" />
+
+	<node pkg="real_robot_controller" name="job_publisher_rob_id" type="job_publisher_rob_id.py" output="screen" />
+
 </launch>
