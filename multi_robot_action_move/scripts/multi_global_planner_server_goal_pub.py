@@ -25,7 +25,7 @@ def handle_multi_planner(req):
     map = np.reshape(map,(map_height,map_width))
     agent_pos = []
     _agent = 0
-    for pos in req.start.robot_pose_array:
+    for pos in req.start.robot_name_pose:
         agent_pos.append((round(pos.robot_pose.pose.position.x/map_resolution,0),round(pos.robot_pose.pose.position.y/map_resolution,0))) #round based on map resolution
     it_jobs =[ round(elem,2) for elem in req.jobs]
     print(it_jobs)
@@ -82,11 +82,13 @@ def handle_multi_planner(req):
             gui_path.header.frame_id = "map"
             gui_path.header.stamp = rospy.Time.now()
             gui_path.poses = Poses
-            if gui_path.poses[0].pose != gui_path.poses[-1].pose:
+            if len(gui_path.poses) == 1:
                 _agent_paths.agent_paths.append(gui_path)
-        if _agent_paths.agent_paths[0].poses[0] == agent_pos[_agent]:
-            _agent_paths.robot_name.data = req.start.robot_pose_array.robot_name.data
-            _agent = _agent + 1
+            elif gui_path.poses[0].pose != gui_path.poses[-1].pose:
+                _agent_paths.agent_paths.append(gui_path)
+        #if _agent_paths.agent_paths[0].poses[0] == agent_pos[_agent]:
+        _agent_paths.robot_name = req.start.robot_name_pose[_agent].robot_name
+        _agent = _agent + 1
         gui_path_array.path_array.append(_agent_paths)
     _agent = 0
     return gui_path_array

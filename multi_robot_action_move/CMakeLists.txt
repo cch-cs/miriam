@@ -11,7 +11,6 @@ find_package(catkin REQUIRED COMPONENTS
   base_local_planner
   geometry_msgs
   message_generation
-  message_runtime
   nav_core
   nav_msgs
   roscpp
@@ -54,11 +53,14 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
  add_message_files(
    FILES
+   agent_job.msg
    robot_pose.msg
    robot_pose_array.msg
    agent_paths_id.msg
    Path_array_agents_id.msg
    robo_goal.msg
+   rob_id.msg
+   Job.msg
 #   Message2.msg
  )
 
@@ -77,10 +79,13 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   nav_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   multi_robot_action_move
+   geometry_msgs
+   std_msgs
+   nav_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##

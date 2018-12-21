@@ -1,2 +1,2 @@
-std_msgs/String robot_name
+string robot_name
 geometry_msgs/PoseStamped robot_goal

@@ -1,2 +1,2 @@
-std_msgs/String robot_name
+string robot_name
 nav_msgs/Path[] agent_paths

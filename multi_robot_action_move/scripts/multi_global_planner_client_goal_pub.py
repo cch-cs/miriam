@@ -1,36 +1,65 @@
 #! /usr/bin/env python
 
 import sys
-
 import rospy
 from multiprocessing import Process
 from multi_robot_action_move.srv import multiplannergreedy,multiplannergreedyResponse
-from multi_robot_action_move.msg import robot_pose_array, robo_goal
+from multi_robot_action_move.msg import robot_pose, robot_pose_array, robo_goal
 from real_robot_controller.msg import Job
 from move_base_msgs.msg import MoveBaseActionResult
 from geometry_msgs.msg import PoseStamped
+from std_msgs.msg import String
 
 class multiglobalplannerclient:
 
     def __init__(self):
         self._jobs = []
-        self._fname = 'MessLabor_lab_sample.pkl'
+        self._fname = 'world_multiplanner.pkl'
         self._agent_pos = None
         self.robo_status = []
+       # self.robo_status_seq = []
         self.robo_goal = []
-        self.goal_pub = []
-        rospy.Subscriber("agents_pos", robot_pose_array, self.multi_planner_client)
+        self.goal_pub = [None] * (len(sys.argv) - 1)
+        self._agent_pos = robot_pose_array()
+        self.pos = 0
+        self.pos_dup = False
+        rospy.Subscriber(sys.argv[1] + "/agent_pos", robot_pose, self.agent_pos_Subscriber_callback)
+        rospy.Subscriber(sys.argv[2] + "/agent_pos", robot_pose, self.agent_pos_Subscriber_callback)
+       # rospy.Subscriber("agents_pos", robot_pose_array, self.multi_planner_client)
         rospy.Subscriber("job",Job,self.job_subscriber)
-        for i in (len(sys.argv) - 1)
-            rospy.Subscriber(sys.argv[i + 1] + "/move_base/result",MoveBaseActionResult,self.move_base_status, i + 1)
-            self.goal_pub.append(rospy.Publisher(sys.argv[i + 1] + "/move_base_simple/goal",PoseStamped,queue_size=1))
+        rospy.Subscriber(sys.argv[1] + "/move_base/result", MoveBaseActionResult, self.move_base_status)
+        rospy.Subscriber(sys.argv[2] + "/move_base/result", MoveBaseActionResult, self.move_base_status)
+       # rospy.Subscriber("agents_pos", robot_pose_array, self.multi_planner_client)
+        self.goal_pub[0] = rospy.Publisher(sys.argv[1] + "/move_base_simple/goal",PoseStamped,queue_size=1)
+        self.goal_pub[1] = rospy.Publisher(sys.argv[2] + "/move_base_simple/goal",PoseStamped,queue_size=1)
+
+    def agent_pos_Subscriber_callback(self,msg):
+        _start = robot_pose()
+        _start = msg
+        if len(self._agent_pos.robot_name_pose) < 1:
+            self._agent_pos.robot_name_pose.append(_start)
+        else:
+            for pose in self._agent_pos.robot_name_pose:
+                if ((round(_start.robot_pose.pose.position.x,1) == round(pose.robot_pose.pose.position.x,1)) and (round(_start.robot_pose.pose.position.y,1) == round(pose.robot_pose.pose.position.y,1))):
+                    self.pos_dup = True
+                    break
+            if not self.pos_dup:
+                self._agent_pos.robot_name_pose.append(_start)
+
+
+            else:
+                rospy.logwarn("The Robot start position is already appended to agent_pos %s",_start)
+                self.pos_dup = False
+        if len(self._agent_pos.robot_name_pose) == 2: # give the no. w.r.t the robots
+            self.robo_status = []
+            self.multi_planner_client(self._agent_pos)
+            self._agent_pos = robot_pose_array()
+            self.pos = 0
 
 
     def multi_planner_client(self,msg):
-        self._agent_pos = msg.robot_pose_array
-        self.robos = len(self._agent_pos)
-        print(self._agent_pos)
-        rosparam.set_param('plan',True)
+        self._agent_pos = msg
+        self.robos = len(self._agent_pos.robot_name_pose)
        # while True:
         if len(self._jobs) > 0:
                 #print(self._jobs)
@@ -44,94 +73,190 @@ class multiglobalplannerclient:
                 self.robo_count = len(resp1.gui_path_array.agent_job)
                 self.robo_jobs = resp1.gui_path_array.agent_job
                 self.job_size = resp1.gui_path_array.max_job_size
-                rosparam.set_param('plan', True)
-                print(self.paths_jobs)
-
+                rospy.set_param('plan', True)
+                self.move_base_goal()
             except rospy.ServiceException, e:
                 print "Service call failed: %s"%e
 
         else:
             rospy.loginfo("There are no jobs in the queue")
 
+    def move_base_status(self,msg):
+        result = msg
+        status = msg.status.status
+        goal_id = msg.status.goal_id.id
+        print("Status!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print(status)
+        print(msg.header.seq)
+        print(goal_id)
+      # status_seq = msg.header.seq
+        if self.agents_name_nojobs == []:
+            if status == 3:
+               # self.robo_status_seq.append(status_seq)
+                self.robo_status.append(True)
+                print("robo_status_append")
+                print(self.robo_status)
+            else:
+               # self.robo_status_seq.append(status_seq)
+                self.robo_status.append(False)
+               # print(result.status.goal_id.id, "failed to reach the goal")
+                print(result, "failed to reach the goal")
+                print(result.status.status)
+        else:
+            for i in range(len(self.agents_name_nojobs)):
+                if self.agents_name_nojobs[i] not in goal_id:
+                    if status == 3:
+               # self.robo_status_seq.append(status_seq)
+                        self.robo_status.append(True)
+                    else:
+                       # self.robo_status_seq.append(status_seq)
+                        self.robo_status.append(False)
+                       # print(result.status.goal_id.id, "failed to reach the goal")
+                        print(result, "failed to reach the goal")
+                        print(result.status.status)
+                    break
+
+
     def move_base_goal(self):
         agents = self.robo_count
-        agents_jobs = self.robo_jobs
-        jobs = True
-        while jobs:
-            _start = 0
+        agents_jobs = []
+        for i in range(len(self.robo_jobs)):
+            agents_jobs.append(list(self.robo_jobs[i].agent_robo_job))
+        print(agents_jobs)
+        _start = True
+        _jobs = True
+        _break = False
+        new_job = [None] * agents
+        jobs_count_array = [0] * agents
+        goals_count_array = [0] * agents
+        self.agents_name_nojobs = []
+        agents_nojobs = []
+        agents_nostatus = []
+        while _jobs:
             agents_count = 0
             jobs_count = 0
             goals_count = 0
-            agents_nojobs = []
             processes = [None] * agents
-            jobs_count_array = [agents]
-            goals_count_array = [agents]
             goal_array = [None] * agents
+            agent_jobs_done = []
             while(agents_count < agents):
-                goal_pub = robo_goal()
-                goal_pub.robot_name = self.paths_jobs[agents_count].robot_name
-                while(jobs_count[agents_count] < len(self.paths_jobs[agents_count])):
-                    while(goals_count[agents_count] < len(self.paths_jobs[agents_count][jobs_count[agents_count]])):
-                        goal_pub = robot_goal()
-                        goal_pub.robot_goal.header.frame_id = self.paths_jobs[agents_count][jobs_count[agents_count]][goals_count[agents_count]].header.frame_id
-                        goal_pub.robot_goal.pose = self.paths_jobs[agents_count][jobs_count[agents_count]][goals_count[agents_count]].pose
+                while(jobs_count_array[agents_count] < len(self.paths_jobs[agents_count].agent_paths)):
+                    while(goals_count_array[agents_count] < len(self.paths_jobs[agents_count].agent_paths[jobs_count_array[agents_count]].poses)):
+                        goal_pub = robo_goal()
+                        goal_pub.robot_name = self.paths_jobs[agents_count].robot_name
+                        goal_pub.robot_goal.header.frame_id = self.paths_jobs[agents_count].agent_paths[jobs_count_array[agents_count]].poses[goals_count_array[agents_count]].header.frame_id
+                        goal_pub.robot_goal.pose = self.paths_jobs[agents_count].agent_paths[jobs_count_array[agents_count]].poses[goals_count_array[agents_count]].pose
                         goal_array[agents_count] = goal_pub
-                        goals_count[agents_count] = goals_count[agents_count] + 1
                         break
-                    if (goals_count[agents_count] < len(self.paths_jobs[agents_count][jobs_count[agents_count]])):
+                    if (goals_count_array[agents_count] < len(self.paths_jobs[agents_count].agent_paths[jobs_count_array[agents_count]].poses)):
+                        print("breaked !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                        goals_count_array[agents_count] = goals_count_array[agents_count] + 1
                         break
                     else:
-                        jobs_count[agents_count] = jobs_count[agents_count] + 1
-                        goals_count[agents_count] = 0
-                        agents_jobs[agents_count].pop(0)
+                        print("OOOOOOps")
+                        new_job[agents_count] = True
+                        jobs_count_array[agents_count] = jobs_count_array[agents_count] + 1
+                        goals_count_array[agents_count] = 0
+                        print("jobs_count_array")
+                        print(jobs_count_array[agents_count])
+                        if jobs_count_array[agents_count]%2 == 0:
+                            del agents_jobs[agents_count][0]
                         if len(agents_jobs[agents_count]) == 0:
+                            self.agents_name_nojobs.append(self.paths_jobs[agents_count].robot_name)
                             agents_nojobs.append(agents_count)
+                            agents_nostatus.append(agents_count)
+                            print("agents_nojobs")
+                            print(agents_nojobs)
+                            print("agents_nostatus")
+                            print(agents_nostatus)
                             break
-                        continue
+                        else:
+                            print("continue")
+                            continue
 
                 agents_count = agents_count + 1
                 while (agents_count in agents_nojobs):
                     agents_count = agents_count + 1
-            _start = _start + 1
-            for i in len(processes):
-                if _start == 1:
-                    processes[i] = Process(target = self.goal_publisher, args= goal_array[i])
-                    processes[i].start
-                else:
-                    robo_status_array = []
-                    robo_result_array = []
-                    for j in (len(sys.argv) - 1):
-                        robo_result_array[j] = rospy.wait_for_message(sys.argv[j + 1] + "/move_base/result",MoveBaseActionResult)
-                        if robo_result_array[j].status.status == 3:
-                            robo_status_array[j] = True
-                        else:
-                            ros_info(robo_result_array[j].status.goal_id.id, "failed to reach the goal")
+
+
+       # for i in range(len(processes)):
+            if _start == True:
+               # processes[i] = Process(target = goal_publisher, args= [goal_array[i]])
+               # print(processes)
+               # print("Hi")
+               # processes[i].start
+               # print(processes[i].start)
+               # print("Hello")
+                print("if")
+                self.goal_publisher(goal_array)
+              #  if i == (len(processes) - 1):
+                _start = False
+            else:
+                # robo_status_array = []
+                # robo_result_array = []
+                # new_plan_array = []
+                # for j in range(len(sys.argv) - 1):
+                #     robo_result_array.append(rospy.wait_for_message(sys.argv[j + 1] + "/move_base/result",MoveBaseActionResult))
+                #     if robo_result_array[j].status.status == 3:
+                #         robo_status_array[j] = True
+                #     else:
+                #         ros_info(robo_result_array[j].status.goal_id.id, "failed to reach the goal")
+                #         break
+                # for j in range(len(sys.argv) - 1):
+                #     new_plan_array.append(rospy.wait_for_message(sys.argv[j + 1] + "/robot_id"),String)
+                # if all(robo_status_array):
+                #         processes[i] = Process(target = self.goal_publisher, args= goal_array[i])
+                #         processes[i].start
+                print("else")
+                while True:
+                    if len(self.robo_status) == (agents - len(agents_nostatus)):
+                        print("self.robo_status")
+                        print(self.robo_status)
+                        if all(self.robo_status):
+                           # processes[i] = Process(target = self.goal_publisher, args= goal_array[i])
+                           # processes[i].start
+                            self.goal_publisher(goal_array)
+                            self.robo_status = []
                             break
-                    if all(robo_status_array):
-                        processes[i] = Process(target = self.goal_publisher, args= goal_array[i])
-                        processes[i].start
+                        else:
+                            print("some of the robots failed to reach the goal, So holding all the goals")
+                            _break = True
+                            break
+                if _break:
+                    _jobs = False
+                    break
 
-
-
-
-    def move_base_status(self,msg,args):
-        robot_status = msg
-        if robot_status.status.status == 3:
-
-            if sys.argv[1] in robot_status.status.goal_id.id:
-            if sys.argv[2] in robot_status.status.goal_id.id:
-        else:
-            ros_info("The robot failed to go the goal")
-
+            for jobs in agents_jobs:
+                print(jobs)
+                if not jobs:
+                    agent_jobs_done.append(True)
+            if len(agent_jobs_done) == len(agents_jobs):
+                rospy.loginfo("jobs done by all agents")
+                self.agents_name_nojobs = []
+                _jobs = False
+                rospy.set_param('plan', False)
 
     def goal_publisher(self,msg):
-        for i in (len(sys.argv) - 1)
-            if msg.robot_name == sys.argv[i + 1]:
+        for i in range(len(msg)):
+            if msg[i] is not None:
+                print("goal")
+                print(i)
+                j = 0
                 while True:
-                    if self.goal_pub[i].get_num_connections() > 0 :
-                        self.goal_pub[i].publish(msg.robot_goal)
+                    if msg[i].robot_name == sys.argv[j + 1]:
+                        while True:
+                            if self.goal_pub[j].get_num_connections() > 0 :
+                               # print("goal_publisher")
+                               # print(msg.robot_name)
+                                self.goal_pub[j].publish(msg[i].robot_goal)
+                                # j = 0
+                                break
                         break
-                break
+                    else:
+                        j = j + 1
+                        continue
+              #      j = j + 1
+              #  break
 
     def job_subscriber(self,msg):
         _job = msg
