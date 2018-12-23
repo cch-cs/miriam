@@ -4,6 +4,8 @@
 	<include file="$(find real_robot_controller)/launch/multi_global_planner_server.launch">
 		<arg name="rob_1" value="robot1"/>
 		<arg name="rob_2" value="robot2"/>
+		<arg name="map" value="world_multiplanner.png"/>
+		<arg name="fname" value="world_multiplanner.pkl"/>
 	</include>
 	<include file="$(find mybot_gazebo)/launch/mybots_world.launch" />
 	<include file="$(find mybot_gazebo)/launch/map_lowres.launch" >
