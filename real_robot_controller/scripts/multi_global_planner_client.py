@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import sys
 import numpy as np
 import rospy
 from real_robot_controller.msg import Path_array_agentjob
@@ -12,7 +13,7 @@ class multiglobalplannerclient:
 
     def __init__(self):
         self._jobs = []
-        self._fname = 'MessLabor_lab_sample.pkl'
+        self._fname = sys.argv[1]
         self.pub_times = None
         self._agent_pos = None
         rospy.Subscriber("agents_pos", Plan, self.multi_planner_client)

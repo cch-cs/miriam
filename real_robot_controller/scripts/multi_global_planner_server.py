@@ -21,12 +21,12 @@ import rospy
 
 def handle_multi_planner(req):
     #global map
-    _map = load_map('/home/cch-student/my_ws/src/world_multiplanner.png')
+    _map = load_map(os.path.realpath(os.path.join(__file__,"../../../")) + '/real_robot_controller/map/' + sys.argv[1])
 #    print ('Map is: ' + _map)
 #    _map = rospy.wait_for_message("/map",OccupancyGrid) # change the topic based on the namespace
 #    map_resolution = round(_map.info.resolution,2)
 #    print(map_resolution)
-    map_resolution = 1 #
+    map_resolution = 1
 #    map_width = _map.info.width
 #    map_height = _map.info.height
 #    map = np.array(_map.data)
@@ -58,8 +58,8 @@ def handle_multi_planner(req):
     print(str(agent_pos))
     print("GREEDY")
     gui_path_array = Path_array_agentjob()
-#    res_agent_job, tuple_paths = plan_greedy(agent_pos, jobs, grid, config)
-    res_agent_job, idle, tuple_paths = plan_tcbs(agent_pos, jobs, [], [], grid, config, plot=False)
+    res_agent_job, tuple_paths = plan_greedy(agent_pos, jobs, grid, config)
+#    res_agent_job, idle, tuple_paths = plan_tcbs(agent_pos, jobs, [], [], grid, config, plot=False)
     max_job_size = max([len(i) for i in res_agent_job]) * 2
     gui_path_array.max_job_size = max_job_size
 
