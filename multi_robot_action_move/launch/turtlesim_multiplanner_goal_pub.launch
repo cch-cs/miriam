@@ -3,6 +3,8 @@
 	<include file="$(find multi_robot_action_move)/launch/multi_global_planner_server_goal_pub.launch">
 		<arg name="rob_1" value="turtlebot1"/>
 		<arg name="rob_2" value="turtlebot2"/>
+		<arg name="map" value="world_multiplanner.png"/>
+		<arg name="fname" value="world_multiplanner.pkl" />
 	</include>
 	<include file="$(find turtlesim_nav)/launch/turtlesim_2robs_goal_pub.launch" />
 

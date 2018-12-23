@@ -4,6 +4,8 @@
 	<include file="$(find multi_robot_action_move)/launch/multi_global_planner_server_goal_pub.launch">
 		<arg name="rob_1" value="robot1_tf"/>
 		<arg name="rob_2" value="robot2_tf"/>
+		<arg name="map" value="world_multiplanner.png"/>
+		<arg name="fname" value="world_multiplanner.pkl"/>
 	</include>
 	<include file="$(find mybot_gazebo)/launch/mybots_world_goal_pub.launch" />
 	<include file="$(find mybot_gazebo)/launch/map_lowres_goal_pub.launch" >
