@@ -9,10 +9,10 @@
 <!--  <include file="$(find msb_interface)/msb_mulag.launch" /> -->
  </group>
 
- <arg name="map_file" default="$(find turtlesim_nav)/map/world_multiplanner.yaml"/>
+<!-- <arg name="map_file" default="$(find turtlesim_nav)/map/world_multiplanner.yaml"/> -->
 
 <!--- Run map_server -->
- <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+<!-- <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/> -->
  
 </launch>
 
