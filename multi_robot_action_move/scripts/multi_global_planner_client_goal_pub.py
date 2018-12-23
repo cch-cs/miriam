@@ -14,7 +14,7 @@ class multiglobalplannerclient:
 
     def __init__(self):
         self._jobs = []
-        self._fname = 'world_multiplanner.pkl'
+        self._fname = sys.argv[3]
         self._agent_pos = None
         self.robo_status = []
        # self.robo_status_seq = []

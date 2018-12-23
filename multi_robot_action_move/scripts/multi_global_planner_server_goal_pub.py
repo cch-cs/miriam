@@ -6,7 +6,7 @@ import sys
 from nav_msgs.msg import OccupancyGrid,Path
 from geometry_msgs.msg import PoseStamped
 sys.path.append(os.path.realpath(os.path.join(__file__,"../../../")))
-
+from tools import load_map
 from planner.tcbs.plan import generate_config
 from planner.greedy.greedy import plan_greedy
 from multi_robot_action_move.msg import agent_paths_id, Path_array_agents_id
@@ -16,12 +16,14 @@ from nav_msgs.msg import Path
 import rospy
 
 def handle_multi_planner(req):
-    _map = rospy.wait_for_message("/map",OccupancyGrid) # change the topic based on the namespace
-    map_resolution = round(_map.info.resolution,2)
-    map_width = _map.info.width
-    map_height = _map.info.height
-    map = np.array(_map.data)
-    map = np.reshape(map,(map_height,map_width))
+    _map = load_map(os.path.realpath(os.path.join(__file__,"../../../")) + '/multi_robot_action_move/map/' + sys.argv[1])
+    map_resolution = 1
+#    _map = rospy.wait_for_message("/map",OccupancyGrid) # change the topic based on the namespace
+#    map_resolution = round(_map.info.resolution,2)
+#    map_width = _map.info.width
+#    map_height = _map.info.height
+#    map = np.array(_map.data)
+#    map = np.reshape(map,(map_height,map_width))
     agent_pos = []
     _agent = 0
     for pos in req.start.robot_name_pose:
@@ -37,7 +39,8 @@ def handle_multi_planner(req):
         job = (tuple_start,tuple_goal,sublist[4])
         print(job)
         jobs.append(job)
-    grid = np.repeat(map[:, ::, np.newaxis], 100, axis=2)
+    grid = np.repeat(_map[:, ::2, np.newaxis], 100, axis=2)
+#    grid = np.repeat(map[:, ::, np.newaxis], 100, axis=2)
 
     config = generate_config()
     config['filename_pathsave'] = req.fname
