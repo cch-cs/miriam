@@ -37,8 +37,8 @@ class agents_pos_publisher:
                 self._agents_pos_pub.publish(self._agent_pos)
                 self._agent_pos = robot_pose_array()
                 self.i = 0
-                print("self._agent_pos_none")
-                print(self._agent_pos)
+                # print("self._agent_pos_none")
+                # print(self._agent_pos)
                 break
 
 if __name__ == "__main__":
