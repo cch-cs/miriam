@@ -88,7 +88,6 @@ def handle_multi_planner(req):
                 _agent_paths.agent_paths.append(gui_path)
             elif gui_path.poses[0].pose != gui_path.poses[-1].pose:
                 _agent_paths.agent_paths.append(gui_path)
-        #if _agent_paths.agent_paths[0].poses[0] == agent_pos[_agent]:
         _agent_paths.robot_name = req.start.robot_name_pose[_agent].robot_name
         _agent = _agent + 1
         gui_path_array.path_array.append(_agent_paths)
